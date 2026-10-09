@@ -1,5 +1,3 @@
-[Reading 147 lines from start (total: 147 lines, 0 remaining)]
-
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -28,6 +26,7 @@ namespace PimpMyBakkie.Prototype
             Cube("Cab", new Vector3(0, 1.65f, .55f), new Vector3(3.45f, 1.25f, 3.25f), body);
             Cube("Windscreen", new Vector3(0, 2.05f, -1.12f), new Vector3(2.85f, .78f, .055f), glass);
             Cube("RearWindow", new Vector3(0, 2.04f, 2.18f), new Vector3(2.45f, .72f, .05f), glass);
+
             for (int side = -1; side <= 1; side += 2)
             {
                 Cube("SideWindow", new Vector3(side * 1.735f, 2.04f, .5f), new Vector3(.045f, .7f, 1.28f), glass);
@@ -43,6 +42,7 @@ namespace PimpMyBakkie.Prototype
             Cube("FrontGrille", new Vector3(0, 1.22f, -3.57f), new Vector3(1.45f, .34f, .1f), dark);
             Cube("FrontBumper", new Vector3(0, .72f, -3.62f), new Vector3(3.75f, .25f, .22f), metal);
             Cube("RearBumper", new Vector3(0, .72f, 3.58f), new Vector3(3.75f, .25f, .22f), metal);
+
             for (int side = -1; side <= 1; side += 2)
             {
                 Cube("Headlamp", new Vector3(side * 1.35f, 1.38f, -3.57f), new Vector3(.55f, .3f, .08f), lamp);
@@ -59,6 +59,7 @@ namespace PimpMyBakkie.Prototype
                 if (existing != null) Destroy(existing);
                 upgrades.Remove(key);
             }
+
             if (key == "Lift")
                 transform.localPosition = enabled ? new Vector3(0, .25f, 0) : Vector3.zero;
             if (!enabled) return;
@@ -66,6 +67,7 @@ namespace PimpMyBakkie.Prototype
             var root = new GameObject("Upgrade_" + key);
             root.transform.SetParent(transform, false);
             upgrades[key] = root;
+
             switch (key)
             {
                 case "Bullbar":
@@ -89,25 +91,21 @@ namespace PimpMyBakkie.Prototype
                     break;
                 case "Lights":
                     for (int s = -1; s <= 1; s += 2)
-                    {
                         Part(root.transform, "SpotLight", new Vector3(s * .7f, 1.42f, -3.9f), new Vector3(.32f, .32f, .22f), lamp);
-                    }
-                    break;
-                case "Lift":
-                    root.transform.localPosition = new Vector3(0, .25f, 0);
                     break;
             }
         }
 
-        void Wheel(Vector3 p)
+        void Wheel(Vector3 position)
         {
             var wheel = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             wheel.name = "AllTerrainTyre";
             wheel.transform.SetParent(transform, false);
-            wheel.transform.localPosition = p;
+            wheel.transform.localPosition = position;
             wheel.transform.localRotation = Quaternion.Euler(90, 0, 0);
             wheel.transform.localScale = new Vector3(.88f, .35f, .88f);
             wheel.GetComponent<Renderer>().material = dark;
+
             var hub = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             hub.name = "WheelHub";
             hub.transform.SetParent(wheel.transform, false);
@@ -129,13 +127,17 @@ namespace PimpMyBakkie.Prototype
             part.transform.SetParent(parent, false);
             part.transform.localPosition = position;
             part.transform.localScale = scale;
-            part.GetComponent<Renderer>().material = material;
+            part.GetComponent<Renderer>().sharedMaterial = material;
         }
 
         Material Mat(Color color, float metallic, float smoothness, bool emission = false)
         {
-            var shader = Shader.Find("Universal Render Pipeline/Lit");
-            if (shader == null) shader = Shader.Find("Standard");
+            // This project currently uses Unity's Built-in render pipeline. Prefer Standard
+            // so runtime-generated geometry does not render magenta. URP remains a fallback.
+            var shader = Shader.Find("Standard");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null) shader = Shader.Find("Universal Render Pipeline/Simple Lit");
+            if (shader == null) shader = Shader.Find("Unlit/Color");
             var material = new Material(shader);
             material.color = color;
             if (material.HasProperty("_Metallic")) material.SetFloat("_Metallic", metallic);
@@ -149,5 +151,3 @@ namespace PimpMyBakkie.Prototype
         }
     }
 }
-
-[executed on device: DESKTOP-2IPJ9P8 (59869c7c-cbf0-49d3-b774-8bcd0132f317)]

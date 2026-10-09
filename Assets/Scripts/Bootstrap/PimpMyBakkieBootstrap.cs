@@ -16,9 +16,14 @@ namespace PimpMyBakkie
             var ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
             ground.name = "DisplayGround";
             ground.transform.localScale = Vector3.one * 8f;
-            var groundMaterial = new Material(Shader.Find("Universal Render Pipeline/Lit"));
-            groundMaterial.color = new Color(.18f, .2f, .17f);
-            ground.GetComponent<Renderer>().material = groundMaterial;
+            var groundShader = Shader.Find("Standard");
+            if (groundShader == null) groundShader = Shader.Find("Universal Render Pipeline/Lit");
+            if (groundShader != null)
+            {
+                var groundMaterial = new Material(groundShader);
+                groundMaterial.color = new Color(.18f, .2f, .17f);
+                ground.GetComponent<Renderer>().sharedMaterial = groundMaterial;
+            }
 
             var cameraObject = new GameObject("Main Camera");
             cameraObject.tag = "MainCamera";

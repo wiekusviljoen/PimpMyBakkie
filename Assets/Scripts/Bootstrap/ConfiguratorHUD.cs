@@ -1,7 +1,3 @@
-[Reading 144 lines from start (total: 144 lines, 0 remaining)]
-
-[Reading 140 lines from start (total: 140 lines, 0 remaining)]
-
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -27,8 +23,11 @@ namespace PimpMyBakkie
 
         void BuildInterface()
         {
-            var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
-            DontDestroyOnLoad(eventSystem);
+            if (FindFirstObjectByType<EventSystem>() == null)
+            {
+                var eventSystem = new GameObject("EventSystem", typeof(EventSystem), typeof(InputSystemUIInputModule));
+                eventSystem.GetComponent<InputSystemUIInputModule>().AssignDefaultActions();
+            }
 
             var canvasObject = new GameObject("ConfiguratorCanvas", typeof(Canvas), typeof(CanvasScaler), typeof(GraphicRaycaster));
             var canvas = canvasObject.GetComponent<Canvas>();
@@ -39,7 +38,7 @@ namespace PimpMyBakkie
             scaler.referenceResolution = new Vector2(1080, 1920);
             scaler.matchWidthOrHeight = .5f;
 
-            var header = Panel(canvasObject.transform, "Header", new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -210), new Vector2(0, 0), new Color(.035f, .055f, .047f, .96f));
+            var header = Panel(canvasObject.transform, "Header", new Vector2(0, 1), new Vector2(1, 1), new Vector2(0, -210), Vector2.zero, new Color(.035f, .055f, .047f, .96f));
             var title = Label(header, "PIMPMYBAKKIE", 48, FontStyle.Bold, TextAnchor.MiddleLeft);
             title.rectTransform.offsetMin = new Vector2(46, 100);
             title.rectTransform.offsetMax = new Vector2(-30, -22);
@@ -48,14 +47,13 @@ namespace PimpMyBakkie
             subtitle.rectTransform.offsetMin = new Vector2(48, 34);
             subtitle.rectTransform.offsetMax = new Vector2(-30, -104);
 
-            var footer = Panel(canvasObject.transform, "BuildPanel", new Vector2(0, 0), new Vector2(1, 0), new Vector2(0, 0), new Vector2(0, 570), new Color(.035f, .055f, .047f, .97f));
+            var footer = Panel(canvasObject.transform, "BuildPanel", Vector2.zero, new Vector2(1, 0), Vector2.zero, new Vector2(0, 570), new Color(.035f, .055f, .047f, .97f));
             var label = Label(footer, "YOUR BUILD  /  ESTIMATES", 24, FontStyle.Bold, TextAnchor.MiddleLeft);
             label.rectTransform.offsetMin = new Vector2(36, 490);
             label.rectTransform.offsetMax = new Vector2(-30, -18);
             statsText = Label(footer, "", 24, FontStyle.Normal, TextAnchor.UpperLeft);
             statsText.rectTransform.offsetMin = new Vector2(38, 300);
             statsText.rectTransform.offsetMax = new Vector2(-24, -88);
-
             statusText = Label(footer, "Choose upgrades below", 20, FontStyle.Italic, TextAnchor.MiddleLeft);
             statusText.color = new Color(.72f, .82f, .74f);
             statusText.rectTransform.offsetMin = new Vector2(38, 252);
@@ -90,10 +88,10 @@ namespace PimpMyBakkie
             rect.anchorMin = Vector2.zero; rect.anchorMax = Vector2.one;
             rect.offsetMin = Vector2.zero; rect.offsetMax = Vector2.zero;
             var text = obj.GetComponent<Text>();
-            text.text = value;
-            text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            text.fontSize = size; text.fontStyle = style; text.alignment = alignment;
-            text.color = new Color(.94f, .96f, .93f);
+            // Arial.ttf was removed as a valid runtime font in recent Unity versions.
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.text = value; text.fontSize = size; text.fontStyle = style;
+            text.alignment = alignment; text.color = new Color(.94f, .96f, .93f);
             text.horizontalOverflow = HorizontalWrapMode.Wrap;
             text.verticalOverflow = VerticalWrapMode.Overflow;
             return text;
@@ -114,8 +112,8 @@ namespace PimpMyBakkie
             colors.highlightedColor = new Color(.28f, .4f, .29f);
             colors.pressedColor = new Color(.38f, .55f, .37f);
             button.colors = colors;
-            var label = Label(obj, caption, 18, FontStyle.Bold, TextAnchor.MiddleCenter);
-            label.raycastTarget = false;
+            var buttonLabel = Label(obj, caption, 18, FontStyle.Bold, TextAnchor.MiddleCenter);
+            buttonLabel.raycastTarget = false;
             return button;
         }
 
@@ -147,7 +145,3 @@ namespace PimpMyBakkie
         }
     }
 }
-
-[executed on device: DESKTOP-2IPJ9P8 (59869c7c-cbf0-49d3-b774-8bcd0132f317)]
-
-[executed on device: DESKTOP-2IPJ9P8 (59869c7c-cbf0-49d3-b774-8bcd0132f317)]

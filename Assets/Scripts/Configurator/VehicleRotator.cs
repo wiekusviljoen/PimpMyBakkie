@@ -6,14 +6,14 @@ namespace PimpMyBakkie.Configurator
     public sealed class VehicleRotator : MonoBehaviour
     {
         [SerializeField] Transform target;
-        [SerializeField] float rotationSpeed = .18f, zoomSpeed = .012f, minDistance = 2.5f, maxDistance = 8f;
+        [SerializeField] float rotationSpeed = .18f, zoomSpeed = .012f, minDistance = 6f, maxDistance = 16f;
         Camera cam;
-        float distance = 5f;
+        float distance = 10f;
 
         void Awake()
         {
-            cam = Camera.main;
             if (target == null) target = transform;
+            cam = Camera.main;
         }
 
         void Update()
@@ -27,7 +27,6 @@ namespace PimpMyBakkie.Configurator
         {
             var touchscreen = Touchscreen.current;
             if (touchscreen == null) return;
-
             if (touchscreen.touches.Count >= 1 && touchscreen.touches[0].press.isPressed)
                 target.Rotate(Vector3.up, -touchscreen.touches[0].delta.ReadValue().x * rotationSpeed, Space.World);
 
@@ -44,20 +43,19 @@ namespace PimpMyBakkie.Configurator
 
         void HandleMouseInput()
         {
-            var mouse = UnityEngine.InputSystem.Mouse.current;
+            var mouse = Mouse.current;
             if (mouse == null) return;
-
             if (mouse.leftButton.isPressed)
                 target.Rotate(Vector3.up, -mouse.delta.ReadValue().x * rotationSpeed, Space.World);
-
             distance -= mouse.scroll.ReadValue().y * .01f;
             distance = Mathf.Clamp(distance, minDistance, maxDistance);
         }
 
         void UpdateCamera()
         {
+            if (cam == null) cam = Camera.main;
             if (cam == null) return;
-            var focus = target.position + Vector3.up * .8f;
+            var focus = target.position + Vector3.up * 1.25f;
             cam.transform.position = focus + Quaternion.Euler(12f, target.eulerAngles.y + 155f, 0f) * Vector3.forward * distance;
             cam.transform.LookAt(focus);
         }
