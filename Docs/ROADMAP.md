@@ -1,25 +1,23 @@
 # PimpMyBakkie Roadmap
 
-## Phase 1 — Working prototype
-- Unity 6 mobile foundation
-- Touch rotation and pinch zoom
-- Vehicle and part data models
-- Build-state performance estimates
-- Photo/vehicle-identification service boundary
-- Procedural placeholder bakkie
-- Camera capture and confirmation UI
+## Implemented foundation
+- Unity 6 photo-first client and real photo preview.
+- Windows image import and supported-device camera capture.
+- AI vehicle-identification endpoint with conservative output and user confirmation/editing.
+- Accessory selection and photo-based edit endpoint.
+- Original/preview comparison and service health settings.
+- Backend API key stays server-side.
 
-## Phase 2 — Real vehicle experience
-- Production-quality 3D vehicle assets
-- Modular compatible upgrades
-- PBR materials and realistic lighting
-- Vehicle-specific compatibility rules
-- Save/share builds
+## Next production work
+- Secure hosted backend with HTTPS, user authentication, rate limits, cost limits and image-retention controls.
+- Native photo-library import for Android and iOS.
+- Exact variant catalogue with licensed photorealistic 3D vehicle assets and real part models.
+- Compatibility database with fitment dimensions, supplier SKU, price, installation notes and legal restrictions.
+- Save/share builds and account sync.
+- Automated editor/play-mode and Android build verification.
 
-## Phase 3 — AI identification
-Photo -> recognition service -> make/model/year/variant candidates -> owner confirmation.
-
-## Phase 4 — Commercial catalogue
-Real parts, local pricing, dealers/installers, build cost, affiliate/dealer leads and premium visualisation.
-
-Performance numbers must be labelled as estimates unless backed by manufacturer, tuner or test data.
+## Product rules
+- Never display a generic procedural bakkie as if it were the user's vehicle.
+- Vehicle identification is a suggestion until the owner confirms it.
+- Image edits are visual concepts, not verified mechanical fitment.
+- Performance changes and costs must be marked as estimates unless backed by manufacturer, installer or test data.

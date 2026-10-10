@@ -9,11 +9,15 @@
 [Mm]emoryCaptures/
 [Rr]ecordings/
 
+# .NET backend build output
+**/bin/
+
 # IDE and OS files
 .vs/
 .vscode/
 .idea/
 *.csproj
+!PimpMyBakkie.Api/PimpMyBakkie.Api.csproj
 *.sln
 *.suo
 *.user
