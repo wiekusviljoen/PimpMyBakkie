@@ -38,7 +38,7 @@ namespace PimpMyBakkie.Services
         {
             Task<HttpResponseMessage> task = Client.GetAsync(Endpoint(baseUrl, "/api/health"));
             while (!task.IsCompleted) yield return null;
-            if (task.IsFaulted) { done(false, null, "Service not reachable: " + task.Exception?.GetBaseException().Message); yield break; }
+            if (task.IsFaulted || task.IsCanceled) { done(false, null, task.Exception?.GetBaseException().Message ?? "Service request timed out or was cancelled."); yield break; }
             using (var response = task.Result)
             {
                 Task<string> bodyTask = response.Content.ReadAsStringAsync();
@@ -56,7 +56,7 @@ namespace PimpMyBakkie.Services
             if (photo == null) { done(false, null, "Take or import a photo first."); yield break; }
             Task<HttpResponseMessage> task = SendPhoto(photo, baseUrl, token, "/api/identify", null, null);
             while (!task.IsCompleted) yield return null;
-            if (task.IsFaulted) { done(false, null, "Could not reach the photo service: " + task.Exception?.GetBaseException().Message); yield break; }
+            if (task.IsFaulted || task.IsCanceled) { done(false, null, task.Exception?.GetBaseException().Message ?? "Photo-service request timed out or was cancelled."); yield break; }
             using (var response = task.Result)
             {
                 Task<string> bodyTask = response.Content.ReadAsStringAsync();
@@ -76,7 +76,7 @@ namespace PimpMyBakkie.Services
             if (string.IsNullOrWhiteSpace(accessories)) { done(false, null, "Choose at least one accessory."); yield break; }
             Task<HttpResponseMessage> task = SendPhoto(photo, baseUrl, token, "/api/preview", accessories, vehicle);
             while (!task.IsCompleted) yield return null;
-            if (task.IsFaulted) { done(false, null, "Could not reach the photo service: " + task.Exception?.GetBaseException().Message); yield break; }
+            if (task.IsFaulted || task.IsCanceled) { done(false, null, task.Exception?.GetBaseException().Message ?? "Photo-service request timed out or was cancelled."); yield break; }
             using (var response = task.Result)
             {
                 Task<byte[]> bodyTask = response.Content.ReadAsByteArrayAsync();

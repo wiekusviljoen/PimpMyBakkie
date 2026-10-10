@@ -242,7 +242,7 @@ namespace PimpMyBakkie
             if (capture == null) return;
             cameraRequested = true;
             capture.StartCamera();
-            if (!capture.IsRunning) { SetStatus("No camera available. On mobile, allow camera permission in system settings."); return; }
+            if (!capture.IsRunning) { SetStatus("If a camera permission prompt appears, allow it and tap the camera button again. If denied, enable camera access in system settings."); return; }
             photoSurface.texture = capture.CurrentPreview;
             photoSurface.color = Color.white;
             photoInstructions.SetActive(false);

@@ -11,6 +11,14 @@ namespace PimpMyBakkie.CameraCapture
         public void StartCamera()
         {
             if (IsRunning) return;
+#if UNITY_ANDROID && !UNITY_EDITOR
+            if (!UnityEngine.Android.Permission.HasUserAuthorizedPermission(UnityEngine.Android.Permission.Camera))
+            {
+                UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.Camera);
+                Debug.LogWarning("Camera permission requested. Allow it, then tap the camera button again.");
+                return;
+            }
+#endif
             var devices = WebCamTexture.devices;
             if (devices == null || devices.Length == 0)
             {
